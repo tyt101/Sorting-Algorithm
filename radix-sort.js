@@ -1,44 +1,38 @@
-const RadixSort = (array)=>{
-    const length = array.length
-    if(!Array.isArray(array)||length < 2) return array
-    
-    let bucket = [],
-        max = array[0],
-        loop;
-    
-    // 确定排序数组中的最大值
-    for(let i = 1; i < length;i++){
-        if(array[i] > max){
-            max = array[i]
-        }
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var RadixSort = function(nums) {
+    let n = nums.length
+    if(n<2)return 0
+    let max = -Infinity
+    for(let i = 0;i < nums.length; i++){
+        max = Math.max(nums[i],max)
     }
-    loop = (max+"").length
-
-    //初始化桶
-    for(let i = 0; i < 10; i++){
-        bucket[i]=[]
+    const len = (max+"").length
+    const bucket = []
+    for(let i = 0;i<10;i++){
+        bucket.push([])
     }
-
-    for(let i = 0;i < loop; i++){
-        for(let j = 0;j < length; j++){
-            let str = array[j]+''
-
-            if(str.length>=i+1){
-                let k = parseInt(str[str.length-1-i])   //获取当前位的值
-                bucket[k].push(array[j])
+    for(let i = 0; i < len; i++){   //遍历最大值长度次
+        for(let j = 0;j<nums.length;j++){
+            const temp = nums[j]+""
+            if(temp.length >= i+1){
+                const k = parseInt(temp[temp.length-1-i])
+                bucket[k].push(nums[j])
             }else{
-                bucket[0].push(array)
+                bucket[0].push(nums[j])
             }
         }
-    }
-    // 清空旧数组
-    array.splice(0,length)
-    // 使用bucket重新初始化数组
-    for(let i = 0;i<bucket.length;i++){
-        const count = bucket[i].length
-        for(let j = 0; j < count;j++){
-            array.push(bucket[i][j])
+        // 重置nums
+        nums.splice(0,n)
+        for(let i = 0;i<bucket.length;i++){
+            let temp = bucket[i].length
+            for(let j = 0;j < temp;j++){
+                nums.push(bucket[i][j])
+            }
+            bucket[i]=[]
         }
     }
-    return array
-}
+    return nums
+};
